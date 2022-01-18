@@ -1,0 +1,58 @@
+exec (acomp a) (0,s,[]) == ((length (acomp a)), s, [aval a s])
+
+Proof:
+--TODO Task 4
+
+Proving LHS == RHS for a=(N x) : 
+LHS = exec (acomp a) (0, s, [])
+= exec (acomp (N x)) (0, s, [])
+= exec ([LOADI x]) (0, s, []))
+= exec [] (iexec [LOADI x] (0, s, []))
+= iexec [x] (0, s, [])
+= (1, s, [x])
+
+RHS = (length (acomp a), s, [aval a s])
+= (length (acomp (N x)), s, [aval (N x) s])
+= (length (acomp (N x)), s, [x])
+= (length ([LOADI x]), s, [x])
+= (1, s, [x])
+
+LHS == RHS 
+
+Prroving LHS == RHS for a=(V v) :
+LHS = exec (acomp a) (0, s, [])
+= exec (acomp (V v)) (0, s, [])
+= exec ([LOAD v]) (0, s, [])
+= exec [] (iexec ([LOAD v]) (0, s, []))
+= iexec ([LOAD v]) (0, s, [])
+= (1, s, [s!v])
+
+RHS = (length (acomp a), s, [aval a s])
+= (length (acomp (V v)), s, [aval (V v) s])
+= (length ([LOADI v]), s, [s!v])
+= (1, s, [s!v])
+
+LHS == RHS
+
+Proving LHS == RHS for a=(Plus (N x) (V v)) :
+LHS = exec (acomp a) (0, s, [])
+= exec (acomp (Plus (N x) (V v))) (0, s, [])
+= exec ((acomp (N x)) ++ (acomp (V v)) ++ [ADD]) (0, s, [])
+= exec ([LOADI x] ++ [LOAD v] ++ [ADD]) (0, s, [])
+= exec [LOADI x, LOAD v, ADD] (0, s, [])
+= exec [LOAD v, ADD] (iexec [LOADI x] (0, s, []))
+= exec [LOAD v, ADD] (1, s, [x])
+= exec [ADD] (iexec [LOAD v] (1, s, [x]))
+= exec [ADD] (2, s, [x, s!v])
+= exec [] (iexec [ADD] (2, s, [x, s!v]))
+= exec [] (3, s, [x+s!v])
+= (3, s, [x+s!v])
+
+RHS = (length (acomp a), s, [aval a s])
+= (length (acomp (Plus (N x) (V v))), s, [aval (Plus (N x) (V v)) s])
+= (length ((acomp (N x)) ++ (acomp (V v)) ++ [ADD]), s, [(aval (N x) s) + (aval (V v) s)])
+= (length ([LOADI x] ++ [LOAD v] ++ [ADD]), s, [x+s!v])
+= (length [LOADI x, LOAD v, ADD], s, [x+s!v])
+= (3, s, [x+s!v])
+
+LHS == RHS
